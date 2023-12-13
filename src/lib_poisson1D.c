@@ -5,7 +5,40 @@
 /**********************************************/
 #include "lib_poisson1D.h"
 
-void set_GB_operator_colMajor_poisson1D(double* AB, int *lab, int *la, int *kv){
+
+void set_GB_operator_colMajor_poisson1D(double* AB, int *lab, int *la, int *kv) {
+    //structure matrice a bande pour le stockage en memoire par colonne
+
+    // initialisation des éléments de AB a 0
+    for (int i = 0; i < (*lab) * (*la); i++) {
+        AB[i] = 0.0;
+    }
+
+    // l espacement de la grille 
+    double h = 1.0 / (*la + 1); 
+
+    // Remplissage de la matrice tridiagonal
+    for (int i = 0; i < *la; i++) {
+        // Remplissage de la diagonale inferieur
+        if (i > 0) {
+            AB[(*kv - 1) + i * (*lab)] = 1.0 / (h * h);    // 1/h²
+            // Pour chaque ligne i de la matrice, sauf la première, 
+           
+        }
+
+        // diagonale principale
+        AB[(*kv) + i * (*lab)] = -2.0 / (h * h); // -2/h²
+       
+
+        // diagonale supeieure 
+        if (i < (*la) - 1) {
+            AB[(*kv + 1) + i * (*lab)] = 1.0 / (h * h); // 1/h²
+           
+           
+        }
+    }
+}
+
 }
 
 void set_GB_operator_colMajor_poisson1D_Id(double* AB, int *lab, int *la, int *kv){
@@ -18,7 +51,7 @@ void set_analytical_solution_DBC_1D(double* EX_SOL, double* X, int* la, double* 
 }  
 
 void set_grid_points_1D(double *X, int *la) {
-    // Cette fonction initialise les points de grille pour un domaine 1D
+    // cette fonction initialise les points de grille pour un domaine 1D
 
     double h = 1.0 / (*la + 1); 
     // h: l espacement de la grille, l'inverse du nombre des intervalles+1
@@ -26,11 +59,11 @@ void set_grid_points_1D(double *X, int *la) {
     // La division de 1 sur *la+1 pour avoir les valeurs entre 0 et 1
 
     for (int i = 0; i < *la; i++) {
-        // Cette boucle fait une iteration sur la grille interne pour définir sa valeur
+        // cette boucle fait une iteration sur la grille interne pour définir sa valeur
 
         X[i] = (i + 1) * h;
-        // La position est calculée comme (i + 1) * h.
-        // L indice i + 1 est utilisé car les points de grille commencent apres la limite initiale a 0
+        // la position est calculée comme (i + 1) * h.
+        // l indice i + 1 est utilisé car les points de grille commencent apres la limite initiale a 0
     }
 }
 
