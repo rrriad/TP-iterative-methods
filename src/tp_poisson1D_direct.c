@@ -35,23 +35,7 @@ int main(int argc,char *argv[])
   EX_SOL=(double *) malloc(sizeof(double)*la);
   X=(double *) malloc(sizeof(double)*la);
 
-  void set_grid_points_1D(double *X, int *la) {
-    // Cette fonction initialise les points de grille pour un domaine 1D.
-
-    double h = 1.0 / (*la + 1); 
-    // h: l espacement de la grille c'est' l'inverse du nombre des intervalles 
-    // *la: le nombre de points de grille internes donc *la + 1 donne le nombre totale des intervalles
-    // La division de 1 sur *la + 1 pour avoir les valeurs entre 0 et 1
-
-    for (int i = 0; i < *la; i++) {
-        // Cette boucle fait une iteration sur la grille interne pour définir sa valeur
-
-        X[i] = (i + 1) * h;
-        // La position est calculée comme (i + 1) * h.
-        // L indice i + 1 est utilisé car les points de grille commencent apres la limite initiale a 0
-    }
-}
-
+  // TODO : you have to implement those functions
   set_grid_points_1D(X, &la);
   set_dense_RHS_DBC_1D(RHS,&la,&T0,&T1);
   set_analytical_solution_DBC_1D(EX_SOL, X, &la, &T0, &T1);
