@@ -44,8 +44,18 @@ void set_GB_operator_colMajor_poisson1D(double* AB, int *lab, int *la, int *kv) 
 void set_GB_operator_colMajor_poisson1D_Id(double* AB, int *lab, int *la, int *kv){
 }
 
-void set_dense_RHS_DBC_1D(double* RHS, int* la, double* BC0, double* BC1){
-}  
+void set_dense_RHS_DBC_1D(double* RHS, int* la, double* T0, double* T1) {
+    double h = 1.0 / (*la + 1);  // l espacement
+
+    // initialisation du RHS 
+    for (int i = 0; i < *la; i++) {
+        RHS[i] = ;
+    }
+
+    // conditions aux limites 
+    RHS[0] -= *T0 / (h * h);        // condition aux limites a x = 0
+    RHS[*la - 1] -= *T1 / (h * h);  // condition aux limites a x = 1
+}
 
 void set_analytical_solution_DBC_1D(double* EX_SOL, double* X, int* la, double* BC0, double* BC1){
 }  
