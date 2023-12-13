@@ -17,7 +17,21 @@ void set_dense_RHS_DBC_1D(double* RHS, int* la, double* BC0, double* BC1){
 void set_analytical_solution_DBC_1D(double* EX_SOL, double* X, int* la, double* BC0, double* BC1){
 }  
 
-void set_grid_points_1D(double* x, int* la){
+void set_grid_points_1D(double *X, int *la) {
+    // Cette fonction initialise les points de grille pour un domaine 1D
+
+    double h = 1.0 / (*la + 1); 
+    // h: l espacement de la grille, l'inverse du nombre des intervalles+1
+    // *la: le nombre de points de grille internes donc *la+1 donne le nombre totale des intervalles
+    // La division de 1 sur *la+1 pour avoir les valeurs entre 0 et 1
+
+    for (int i = 0; i < *la; i++) {
+        // Cette boucle fait une iteration sur la grille interne pour définir sa valeur
+
+        X[i] = (i + 1) * h;
+        // La position est calculée comme (i + 1) * h.
+        // L indice i + 1 est utilisé car les points de grille commencent apres la limite initiale a 0
+    }
 }
 
 void write_GB_operator_rowMajor_poisson1D(double* AB, int* lab, int* la, char* filename){
