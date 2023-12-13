@@ -54,7 +54,10 @@ int main(int argc,char *argv[])
   set_GB_operator_colMajor_poisson1D(AB, &lab, &la, &kv);
 
   // write_GB_operator_colMajor_poisson1D(AB, &lab, &la, "AB.dat");
-
+  // implementation du dgbmv
+  double alpha = 1.0;
+  double beta = 0.0;
+  cblas_dgbmv(CblasColMajor, CblasNoTrans, la, la, kl, ku, alpha, AB, kl + ku +1, X, 1, beta, RHS, 1);
   printf("Solution with LAPACK\n");
   /* LU Factorization */
   info=0;
