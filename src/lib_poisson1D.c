@@ -62,8 +62,15 @@ void set_dense_RHS_DBC_1D(double* RHS, int* la, double* T0, double* T1) {
     RHS[*la - 1] -= *T1 / (h * h);  // condition aux limites a x = 1
 }
 
-void set_analytical_solution_DBC_1D(double* EX_SOL, double* X, int* la, double* BC0, double* BC1){
-}  
+void set_analytical_solution_DBC_1D(double* EX_SOL, double* X, int* la, double* BC0, double* BC1) {
+    double h = 1.0 / (*la + 1); // l espacement
+
+    for (int i = 0; i < *la; i++) {
+        // Calculate the analytical solution based on the given boundary conditions
+        EX_SOL[i] = *BC0 + (X[i] - 0.0) * ((*BC1 - *BC0) / 1.0);
+    }
+}
+
 
 void set_grid_points_1D(double *X, int *la) {
     // cette fonction initialise les points de grille pour un domaine 1D
