@@ -5,7 +5,6 @@
 /**********************************************/
 #include "lib_poisson1D.h"
 
-
 void set_GB_operator_colMajor_poisson1D(double* AB, int *lab, int *la, int *kv) {
     //structure matrice a bande pour le stockage en memoire par colonne
 
@@ -23,33 +22,39 @@ void set_GB_operator_colMajor_poisson1D(double* AB, int *lab, int *la, int *kv) 
         if (i > 0) {
             AB[(*kv - 1) + i * (*lab)] = 1.0 / (h * h);    // 1/h²
             // Pour chaque ligne i de la matrice, sauf la première, 
-           
         }
 
         // diagonale principale
         AB[(*kv) + i * (*lab)] = -2.0 / (h * h); // -2/h²
-       
 
         // diagonale supeieure 
         if (i < (*la) - 1) {
             AB[(*kv + 1) + i * (*lab)] = 1.0 / (h * h); // 1/h²
-           
-           
         }
     }
 }
 
+void set_GB_operator_colMajor_poisson1D_Id(double* AB, int *lab, int *la, int *kv) {
+    // Initializdes éléements de AB à 0
+    for (int i = 0; i < (*lab) * (*la); i++) {
+        AB[i] = 0.0;
+    }
+
+    // diagonale=1
+    for (int i = 0; i < *la; i++) {
+        AB[(*kv) + i * (*lab)] = 1.0;
+    }
+    
+   
 }
 
-void set_GB_operator_colMajor_poisson1D_Id(double* AB, int *lab, int *la, int *kv){
-}
 
 void set_dense_RHS_DBC_1D(double* RHS, int* la, double* T0, double* T1) {
     double h = 1.0 / (*la + 1);  // l espacement
 
     // initialisation du RHS 
     for (int i = 0; i < *la; i++) {
-        RHS[i] = ;
+        RHS[i] = 0.0;  // Initialize to zero
     }
 
     // conditions aux limites 
@@ -175,3 +180,4 @@ int indexABCol(int i, int j, int *lab){
 int dgbtrftridiag(int *la, int*n, int *kl, int *ku, double *AB, int *lab, int *ipiv, int *info){
   return *info;
 }
+
