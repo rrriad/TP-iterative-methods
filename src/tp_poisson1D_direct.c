@@ -63,11 +63,23 @@ int main(int argc,char *argv[])
   info=0;
   ipiv = (int *) calloc(la, sizeof(int));
   dgbtrf_(&la, &la, &kl, &ku, AB, &lab, ipiv, &info);
+   // LU en utilisant lapack dgetrf
+  info = LAPACKE_dgetrf(LAPACK_COL_MAJOR, la, la, AB, lab, ipiv);
+  if (info != 0) {
+      fprintf(stderr, "Error: LAPACK dgetrf returned %d\n", info);
+      exit(1);
+  }
+  // resoudre le probleme avec dgetrs
+  info = LAPACKE_dgetrs(LAPACK_COL_MAJOR, 'N', la, NRHS, AB, lab, ipiv, RHS, la);
+  if (info != 0) {
+      fprintf(stderr, "Error: LAPACK dgetrs returned %d\n", info);
+      exit(1);
+    }
 
   /* LU for tridiagonal matrix  (can replace dgbtrf_) */
   // ierr = dgbtrftridiag(&la, &la, &kl, &ku, AB, &lab, ipiv, &info);
 
-  // write_GB_operator_colMajor_poisson1D(AB, &lab, &la, "LU.dat");
+  //write_GB_operator_colMajor_poisson1D(AB, &lab, &la, "LU.dat");
   
   /* Solution (Triangular) */
   if (info==0){
