@@ -1,86 +1,47 @@
 ##########################################
-# Makefile                               #
-# Makefile for the code developed in TP1 #
-#                                        #
-# T. Dufaud                              #
+# Makefile for TP1 Code                 #
+#                                      #
+# Author: T. Dufaud                    #
 ##########################################
-################################
-# Variables for this makefile
-################################
-# 
-# -- option to dedicated machine
-#
-# Rk: You should create a file such as your-machineName.mk
-# Follow the example of the machine called "ambre" in the 
-# file ambre.mk
-#
-HOSTNAME=$(shell hostname)
-include $(HOSTNAME).mk
 
-# 
-# -- Compiler Option
-OPTC=${OPTCLOCAL}
+# Compiler and options
+CC=gcc
+OPTC=-fPIC -march=native
 
-#
-# -- Directories
+# Directories
 TPDIR=.
 TPDIRSRC=$(TPDIR)/src
+BINDIR=$(TPDIR)/bin
 
-#
-# -- librairies
-LIBS=${LIBSLOCAL}
+# Libraries and include directories
+# Update LIBS with your libraries
+LIBS=-lm 
+INCL=-I $(TPDIR)/include -I/usr/include
 
-# -- Include directories
-INCLATLAS=${INCLUDEBLASLOCAL}
-INCL= -I $(TPDIR)/include $(INCLATLAS)
+# Object files
+OBJLIB=lib_poisson1D.o
+OBJITER=tp_poisson1D_iter.o
 
-#
-#################################################################
-# makefile
-############
-#
-OBJENV= tp_env.o
-OBJTP2ITER= lib_poisson1D.o tp_poisson1D_iter.o
-OBJTP2DIRECT= lib_poisson1D.o tp_poisson1D_direct.o
-#
+# Targets
+all: $(BINDIR)/tpPoisson1D_iter
 
-all: bin/tp_testenv bin/tpPoisson1D_iter bin/tpPoisson1D_direct
+# Compile lib_poisson1D.o
+$(OBJLIB): $(TPDIRSRC)/lib_poisson1D.c
+	$(CC) $(OPTC) -c $(INCL) $< -o $@
 
-testenv: bin/tp_testenv
+# Compile tp_poisson1D_iter.o
+$(OBJITER): $(TPDIRSRC)/tp_poisson1D_iter.c
+	$(CC) $(OPTC) -c $(INCL) $< -o $@
 
-tpPoisson1D_iter: bin/tpPoisson1D_iter
+# Linking
+$(BINDIR)/tpPoisson1D_iter: $(OBJLIB) $(OBJITER)
+	$(CC) -o $@ $(OPTC) $^ $(LIBS)
 
-tpPoisson1D_direct: bin/tpPoisson1D_direct
+# Run the tpPoisson1D_iter target
+run_tpPoisson1D_iter: $(BINDIR)/tpPoisson1D_iter
+	$<
 
-tp_env.o: $(TPDIRSRC)/tp_env.c
-	$(CC) $(OPTC) -c $(INCL) $(TPDIRSRC)/tp_env.c 
-
-lib_poisson1D.o: $(TPDIRSRC)/lib_poisson1D.c
-	$(CC) $(OPTC) -c $(INCL) $(TPDIRSRC)/lib_poisson1D.c 
-
-tp_poisson1D_iter.o: $(TPDIRSRC)/tp_poisson1D_iter.c
-	$(CC) $(OPTC) -c $(INCL) $(TPDIRSRC)/tp_poisson1D_iter.c  
-
-tp_poisson1D_direct.o: $(TPDIRSRC)/tp_poisson1D_direct.c
-	$(CC) $(OPTC) -c $(INCL) $(TPDIRSRC)/tp_poisson1D_direct.c  
-
-bin/tp_testenv: $(OBJENV) 
-	$(CC) -o bin/tp_testenv $(OPTC) $(OBJENV) $(LIBS)
-
-bin/tpPoisson1D_iter: $(OBJTP2ITER)
-	$(CC) -o bin/tpPoisson1D_iter $(OPTC) $(OBJTP2ITER) $(LIBS)
-
-bin/tpPoisson1D_direct: $(OBJTP2DIRECT)
-	$(CC) -o bin/tpPoisson1D_direct $(OPTC) $(OBJTP2DIRECT) $(LIBS)
-
-run_testenv:
-	bin/tp_testenv
-
-run_tpPoisson1D_iter:
-	bin/tpPoisson1D_iter
-
-run_tpPoisson1D_direct:
-	bin/tpPoisson1D_direct
-
+# Clean up object files and executables
 clean:
-	rm *.o bin/*
+	rm -f *.o $(BINDIR)/*
+
