@@ -4,7 +4,7 @@
 /* Poisson problem (Heat equation)            */
 /**********************************************/
 #include "lib_poisson1D.h"
-
+#include <math.h>
 
 //calcul de valeurs propres
 void eig_poisson1D(double* eigval, int *la) {
@@ -14,14 +14,17 @@ void eig_poisson1D(double* eigval, int *la) {
     }
 }
 
-
-double eigmax_poisson1D(int *la){
-  return 0;
+// calcul de la plus grande valeur propre 
+double eigmax_poisson1D(int *la) {
+    int n = *la;
+    return 2 - 2 * cos(M_PI / (n + 1));
+}
+// calcul de la plus petite valeur propre
+double eigmin_poisson1D(int *la) {
+    int n = *la;
+    return 2 - 2 * cos(n * M_PI / (n + 1));
 }
 
-double eigmin_poisson1D(int *la){
-  return 0;
-}
 
 double richardson_alpha_opt(int *la){
   return 0;
